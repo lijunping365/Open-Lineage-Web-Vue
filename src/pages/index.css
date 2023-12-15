@@ -1,12 +1,12 @@
 .canvas-wrapper:-webkit-full-screen {
-    background-color: white;
+  background-color: white;
 }
 .canvas-wrapper:-moz-full-screen {
-    background-color: white;
+  background-color: white;
 }
 .canvas-wrapper:-ms-fullscreen {
-    background-color: white;
+  background-color: white;
 }
 .canvas-wrapper:fullscreen {
-    background-color: white;
+  background-color: white;
 }

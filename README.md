@@ -13,7 +13,6 @@
 3. 支持完整血缘与不完整血缘链路切换展示
 
 4. 支持血缘高亮显示
-   
 5. 支持设置血缘高亮颜色
 
 6. 支持画布水印
@@ -102,7 +101,6 @@ graph.off('node:click').on('node:click', (evt: any) => {
   const { item, target } = evt;
   const name = target.get('name');
   if (!name) return;
-
 
   if (fieldCheckedRef.current) {
     handleNodeEvent(graph, item, name);
@@ -209,7 +207,7 @@ export const getRightRelation = (
 ```typescript
 /**
  * 设置左边关联节点及边状态
- * @param graph 
+ * @param graph
  * @param edges 连线
  * @param color 连线高亮颜色
  * @param name 状态名称
@@ -418,8 +416,8 @@ graphRef.current = new G6.Graph({
   fitView: true,
   modes: {
     default: ['drag-canvas', 'zoom-canvas', 'drag-node'],
-  }
-})
+  },
+});
 ```
 
 2. 点击字段空白处不触发事件
@@ -466,7 +464,7 @@ attrs.forEach((e: any, i: any) => {
     name: key,
     draggable: true,
   });
-})
+});
 ```
 
 给矩形填充白色
@@ -487,7 +485,7 @@ attrs.forEach((e: any, i: any) => {
     name: key,
     draggable: true,
   });
-})
+});
 ```
 
 正如我们猜测的那样，填充颜色之后果然能够监听到事件了。
