@@ -12,6 +12,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    "suppressImplicitAnyIndexErrors": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"

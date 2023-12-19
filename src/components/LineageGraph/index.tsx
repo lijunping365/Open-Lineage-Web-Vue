@@ -1,3 +1,13 @@
+/*
+ * @Author: yuxuan-ctrl 
+ * @Date: 2023-12-15 14:52:29
+ * @LastEditors: yuxuan-ctrl 
+ * @LastEditTime: 2023-12-19 17:07:17
+ * @FilePath: \Open-Lineage-Web-Vue\src\components\LineageGraph\index.tsx
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ */
 import React, { useEffect, useRef, useState } from 'react';
 import Toolbar from './components/Toolbar';
 import Topbar from './components/Topbar';
