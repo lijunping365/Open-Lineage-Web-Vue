@@ -13,18 +13,14 @@
           class="h-10"
           alt="logo"
         />
-        <span class="ml-3 text-xl">Open-Lineage</span>
+        <span class="ml-3 text-xl">Open-Lineage-Vue</span>
       </a>
       <nav
         class="flex flex-wrap items-center justify-center space-x-2 text-base md:ml-4 md:mr-auto md:border-l md:border-gray-400 md:py-1 md:pl-4"
       >
         <Select
           v-model:value="selectedValue"
-          style="
-             {
-              width: 100;
-            }
-          "
+          style="width: 120px"
           @change="handleChange"
           :options="[
             { value: 'hive', label: 'Hive' },
@@ -211,7 +207,7 @@ const emit = defineEmits([
   'textWaterMarkerChange',
 ]);
 const open = ref(false);
-const selectedValue = ref('');
+const selectedValue = ref('hive');
 const selectedSize = ref('');
 const theme = computed(() => props.theme);
 const textWaterMarker = computed(() => props.textWaterMarker);

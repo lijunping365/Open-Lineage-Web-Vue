@@ -34,18 +34,20 @@ import { Button, Tooltip } from 'ant-design-vue';
 
 interface ToolBarProps {
   layout: string;
-  handleZoomOut: () => void;
-  handleZoomIn: () => void;
-  handleRealZoom: () => void;
-  handleAutoZoom: () => void;
-  handleRefreshLayout: () => void;
-  handleDownloadImage: () => void;
-  handleEnterFullscreen: () => void;
-  handleExitFullscreen: () => void;
-  handleChangeSize: (width: number, height: number) => void;
 }
 
 const props = defineProps<ToolBarProps>();
+const emit = defineEmits([
+  'handleZoomOut',
+  'handleZoomIn',
+  'handleRealZoom',
+  'handleAutoZoom',
+  'handleRefreshLayout',
+  'handleDownloadImage',
+  'handleEnterFullscreen',
+  'handleExitFullscreen',
+  'handleChangeSize',
+]);
 const isFull = ref(true);
 
 const options = [
@@ -54,7 +56,7 @@ const options = [
     description: '放大',
     name: ZoomInOutlined,
     action: () => {
-      props.handleZoomOut();
+      emit('handleZoomOut');
     },
   },
   {
@@ -62,7 +64,7 @@ const options = [
     description: '缩小',
     name: ZoomOutOutlined,
     action: () => {
-      props.handleZoomIn();
+      emit('handleZoomIn');
     },
   },
   {
@@ -70,7 +72,7 @@ const options = [
     description: '自适应',
     name: OneToOneOutlined,
     action: () => {
-      props.handleAutoZoom();
+      emit('handleAutoZoom');
     },
   },
   {
@@ -78,7 +80,7 @@ const options = [
     description: '视图居中',
     name: BorderOuterOutlined,
     action: () => {
-      props.handleRealZoom();
+      emit('handleRealZoom');
     },
   },
   {
@@ -86,7 +88,7 @@ const options = [
     description: '恢复布局',
     name: UndoOutlined,
     action: () => {
-      props.handleRefreshLayout();
+      emit('handleRefreshLayout');
     },
   },
   {
@@ -94,7 +96,7 @@ const options = [
     description: '下载图片',
     name: FileImageOutlined,
     action: () => {
-      props.handleDownloadImage();
+      emit('handleDownloadImage');
     },
   },
   isFull.value
@@ -104,7 +106,7 @@ const options = [
         name: FullscreenOutlined,
         action: () => {
           isFull.value = !isFull.value;
-          props.handleEnterFullscreen();
+          emit('handleEnterFullscreen');
         },
       }
     : {
@@ -113,7 +115,7 @@ const options = [
         name: FullscreenExitOutlined,
         action: () => {
           isFull.value = !isFull.value;
-          props.handleExitFullscreen();
+          emit('handleExitFullscreen');
         },
       },
 ];
@@ -144,13 +146,13 @@ const checkFull = () => {
     const windowHeight = document.documentElement.clientHeight;
     const width = props.layout === 'preview' ? windowWidth : windowWidth - 340;
     const height = window.outerHeight - 141 || windowHeight;
-    props.handleChangeSize(width, height);
+    emit("handleChangeSize",width,height)
   } else {
     isFull.value = false;
     // 全屏查看修改canvas宽高
     const width = windowWidth;
     const height = window.outerHeight;
-    props.handleChangeSize(width, height);
+    emit("handleChangeSize",width,height)
   }
 };
 </script>

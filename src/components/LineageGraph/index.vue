@@ -12,19 +12,19 @@
         />
       </div>
       <div
-        :ref="toolbarRef!"
+        ref="toolbarRef"
         class="g6-component-toolbar"
       >
         <Toolbar
           :layout="layout"
           :handleChangeSize="handleChangeSize"
-          @handleZoomOut="handleZoomOut"
-          @handleZoomIn="handleZoomIn"
-          @handleRealZoom="handleRealZoom"
-          @handleAutoZoom="handleAutoZoom"
-          @handleRefreshLayout="handleRefreshLayout"
-          @handleDownloadImage="handleDownloadImage"
-          @handleEnterFullscreen="handleEnterFullscreen"
+          @handleZoomOut="handleZoomOut(graphRef)"
+          @handleZoomIn="handleZoomIn(graphRef)"
+          @handleRealZoom="handleRealZoom(graphRef)"
+          @handleAutoZoom="handleAutoZoom(graphRef)"
+          @handleRefreshLayout="handleRefreshLayout(graphRef)"
+          @handleDownloadImage="handleDownloadImage(graphRef)"
+          @handleEnterFullscreen="handleEnterFullscreen(canvasWrapper)"
           @handleExitFullscreen="handleExitFullscreen"
         />
       </div>
@@ -63,6 +63,7 @@ import {
   setRightStats,
 } from '../../utils/graphUtil';
 import { dataTransform, initData } from '../../test/test';
+import screenfull from "screenfull";
 
 interface LineageGraphProps {
   /**
@@ -222,6 +223,16 @@ watch(
     }
   }
 );
+
+const fullScreen = () => {
+  if (screenfull.isEnabled) {
+    screenfull.request(canvasWrapper.value);
+    graphRef.value.resize(
+      document.body.clientWidth,
+      document.body.clientHeight
+    );
+  }
+};
 
 // 更改canvas宽高
 const handleChangeSize = (width: any, height: any) => {
