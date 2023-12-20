@@ -1,10 +1,26 @@
+/*
+ * @Author: yuxuan-ctrl 
+ * @Date: 2023-12-15 14:52:29
+ * @LastEditors: yuxuan-ctrl 
+ * @LastEditTime: 2023-12-19 17:07:17
+ * @FilePath: \Open-Lineage-Web-Vue\src\components\LineageGraph\index.tsx
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ */
 import React, { useEffect, useRef, useState } from 'react';
-import Toolbar from '../LineageGraph/components/Toolbar';
+import Toolbar from './components/Toolbar/index-1';
+import Topbar from './components/Topbar';
 import G6 from '@antv/g6';
-import '../LineageGraph/index.css';
-import '../LineageGraph/registerShape';
-import '../LineageGraph/registerLayout';
-import { getLeftRelation, getRightRelation } from '../../utils/common';
+import './index.css';
+import './registerShape';
+import './registerLayout';
+import {
+  collapseData,
+  getLeftRelation,
+  getRightRelation,
+  transformData,
+} from '../../utils/common';
 import {
   clearAllStats,
   handleAutoZoom,
@@ -21,7 +37,7 @@ import {
   setLeftStats,
   setRightStats,
 } from '../../utils/graphUtil';
-import { dataTransform } from '../../test/test';
+import { dataTransform, initData } from '../../test/test';
 
 interface LineageGraphProps {
   /**
@@ -40,13 +56,23 @@ interface LineageGraphProps {
    * 高亮颜色
    */
   highlightColor: string;
+  /**
+   * 设置节点数量
+   */
+  setNodeSize: (size: number) => void;
+  /**
+   * 设置层数
+   */
+  setNodeLevel: (level: number) => void;
 }
 
-const LineageGraphTest = ({
+const LineageGraph = ({
   layout,
   lineageData,
   highlightColor,
   textWaterMarker,
+  setNodeSize,
+  setNodeLevel,
 }: LineageGraphProps) => {
   const ref = useRef<any>();
   const toolbarRef = useRef<any>();
@@ -55,10 +81,24 @@ const LineageGraphTest = ({
   const fieldCheckedRef = useRef<any>(true);
   const wholeCheckedRef = useRef<any>(true);
   const currentHighlightColorRef = useRef<any>(highlightColor);
+  const [lineageWholeData, setLineageWholeData] = useState<any>();
+  const [lineagePartData, setLineagePartData] = useState<any>();
 
   useEffect(() => {
+    fieldCheckedRef.current = true;
+    wholeCheckedRef.current = true;
+    topBarRef?.current?.setFieldChecked(true);
+    topBarRef?.current?.setWholeChecked(true);
+
     if (lineageData) {
-      const data = dataTransform(lineageData);
+      const wholeData = lineageData.withProcessData;
+      const partData = lineageData.noProcessData;
+      setLineageWholeData(wholeData);
+      setLineagePartData(partData);
+      setNodeSize(wholeData.size);
+      setNodeLevel(wholeData.level);
+
+      const data = transformData(wholeData.data);
       renderGraph(graphRef.current, data);
     }
   }, [lineageData]);
@@ -71,6 +111,78 @@ const LineageGraphTest = ({
     currentHighlightColorRef.current = highlightColor;
     handleHighlightColor(graphRef.current, highlightColor);
   }, [highlightColor]);
+
+  /**
+   * 处理字段血缘切换
+   */
+  const onFieldLineage = (checked: boolean) => {
+    fieldCheckedRef.current = checked;
+    if (!lineageWholeData || !lineagePartData) {
+      return;
+    }
+    let data: any;
+    let size: number;
+    let level: number;
+
+    if (wholeCheckedRef.current) {
+      size = lineageWholeData.size;
+      level = lineageWholeData.level;
+    } else {
+      size = lineagePartData.size;
+      level = lineagePartData.level;
+    }
+
+    if (checked) {
+      if (wholeCheckedRef.current) {
+        data = transformData(lineageWholeData.data);
+      } else {
+        data = transformData(lineagePartData.data);
+      }
+    } else {
+      if (wholeCheckedRef.current) {
+        data = collapseData(lineageWholeData.data);
+      } else {
+        data = collapseData(lineagePartData.data);
+      }
+    }
+
+    setNodeSize(size);
+    setNodeLevel(level);
+    renderGraph(graphRef.current, data);
+  };
+
+  /**
+   * 处理完整血缘链路切换
+   */
+  const onWholeLineage = (checked: boolean) => {
+    wholeCheckedRef.current = checked;
+    if (!lineageWholeData || !lineagePartData) {
+      return;
+    }
+    let data: any;
+    let size: number;
+    let level: number;
+    if (checked) {
+      size = lineageWholeData.size;
+      level = lineageWholeData.level;
+      if (fieldCheckedRef.current) {
+        data = transformData(lineageWholeData.data);
+      } else {
+        data = collapseData(lineageWholeData.data);
+      }
+    } else {
+      size = lineagePartData.size;
+      level = lineagePartData.level;
+      if (fieldCheckedRef.current) {
+        data = transformData(lineagePartData.data);
+      } else {
+        data = collapseData(lineagePartData.data);
+      }
+    }
+    setNodeSize(size);
+    setNodeLevel(level);
+    renderGraph(graphRef.current, data);
+  };
 
   /**
    * 处理节点点击事件
@@ -290,6 +402,13 @@ const LineageGraphTest = ({
         ref={ref}
         className='canvas-wrapper'
       >
+        <div className='g6-component-topbar'>
+          <Topbar
+            ref={topBarRef}
+            handleFieldLineage={(checked: any) => onFieldLineage(checked)}
+            handleWholeLineage={(checked: any) => onWholeLineage(checked)}
+          />
+        </div>
         <div
           ref={toolbarRef}
           className='g6-component-toolbar'
@@ -312,4 +431,4 @@ const LineageGraphTest = ({
   );
 };
 
-export default LineageGraphTest;
+export default LineageGraph;

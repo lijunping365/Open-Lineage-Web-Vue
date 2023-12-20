@@ -5,14 +5,14 @@
         ringClassName || (isActive ? 'focus-visible:ring-sky-500 dark:focus-visible:ring-sky-400' : 'focus-visible:ring-gray-400/70 dark:focus-visible:ring-gray-500'),
     ].join(' ')" @click="$emit('click')">
         <span class="sr-only">{{ label }}</span>
-        <svg :width="width" :height="height"
+        <!-- <svg :width="width" :height="height"
             viewBox="calc((width - naturalWidth) / -2) calc((height - naturalHeight) / -2) width height" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round" :class="[
                 iconClassName,
                 isActive ? 'fill-sky-100 stroke-sky-500 dark:fill-sky-400/50 dark:stroke-sky-400' : 'fill-gray-100 stroke-gray-400/70 hover:fill-gray-200 hover:stroke-gray-400 dark:fill-gray-400/20 dark:stroke-gray-500 dark:hover:fill-gray-400/30 dark:hover:stroke-gray-400',
             ].join(' ')">
             <slot />
-        </svg>
+        </svg> -->
     </button>
 </template>
   

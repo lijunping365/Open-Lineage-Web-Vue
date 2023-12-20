@@ -1,17 +1,17 @@
 import './index.css';
-import LineageGraph from '../components/LineageGraph';
+import LineageGraph from '../components/LineageGraph/index-1';
 import React, { useRef, useState } from 'react';
-import Header from '../components/Header';
+import Header from '../components/Header/index-1';
 import Footer from '../components/Footer';
 import sourceData from '../test/data.json';
 import { getLineageData } from '../services/api';
 import { message, Spin } from 'antd';
-import ITour from '../components/Tour';
+import ITour from '../components/Tour/index-1';
 import { sql } from '../test/sql';
 import SplitPane from 'react-split-pane';
-import MonacoEditor from '../components/MonacoEditor';
+import MonacoEditor from '../components/MonacoEditor/index-1';
 import { useIsomorphicLayoutEffect } from '../hooks/useIsomorphicLayoutEffect';
-import LineageGraphTest from '../components/LineageGraphTest';
+import LineageGraphTest from '../components/LineageGraphTest/index-1';
 import { initData } from '../test/test';
 
 const App = () => {

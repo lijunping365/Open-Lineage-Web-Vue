@@ -7,8 +7,8 @@
       <div class="g6-component-topbar">
         <Topbar
           :ref="topBarRef"
-          :handleFieldLineage="onFieldLineage"
-          :handleWholeLineage="onWholeLineage"
+          @handleFieldLineage="onFieldLineage"
+          @handleWholeLineage="onWholeLineage"
         />
       </div>
       <div
@@ -34,8 +34,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, reactive, watch, watchEffect } from 'vue';
-import Toolbar from './components/Toolbar';
-import Topbar from './components/Topbar';
+import Toolbar from './components/Toolbar/index.vue';
+import Topbar from './components/Topbar/index.vue';
 import G6 from '@antv/g6';
 import './index.css';
 import './registerShape';
@@ -103,12 +103,13 @@ onMounted(() => {
   if (!graphRef.value) {
     // 实例化 Minimap
     const minimap = new G6.Minimap();
+    // TODO 报错
     // 工具栏
-    const toolbar = new G6.ToolBar({
-      getContent: () => {
-        return toolbarRef.value || '';
-      },
-    });
+    // const toolbar = new G6.ToolBar({
+    //   getContent: () => {
+    //     return toolbarRef.value || '';
+    //   },
+    // });
     //网格画布
     const grid = new G6.Grid();
     const container: any = canvasWrapper.value;

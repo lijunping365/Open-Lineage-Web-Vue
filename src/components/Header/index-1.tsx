@@ -5,7 +5,7 @@ import { CodeSandboxOutlined, RocketOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import ColorPicker from '../ColorPicker';
 import clsx from 'classnames';
-import { IconSetting } from '../Icon/IconSetting';
+import { IconSetting } from '../Icon/IconSetting-1';
 
 interface HeaderProps {
   /** 模式 */

@@ -6,7 +6,7 @@
       class="g6-component-topbar-item"
     >
       <span>{{ item.name }}</span>
-      <a-switch
+      <Switch
         size="small"
         :checked="item.value"
         @change="item.action"
@@ -25,29 +25,35 @@ interface TopBarProps {
 }
 
 const props = defineProps<TopBarProps>();
+const emit = defineEmits(["handleFieldLineage","handleWholeLineage"]);
 const fieldChecked = ref(true);
 const wholeChecked = ref(true);
+
+const handleFieldLineage = (checked)=>{
+    fieldChecked.value = checked;
+      emit("handleFieldLineage",checked)
+}
+const handleWholeLineage = (checked)=>{
+    wholeChecked.value = checked;
+      emit("handleWholeLineage",checked)
+}
 
 const options = [
   {
     key: 'zoomOut',
     name: '字段级血缘关系',
-    value: fieldChecked.value,
-    action(checked: boolean) {
-      fieldChecked.value = checked;
-      props.handleFieldLineage(checked);
-    },
+    value: fieldChecked,
+    action:handleFieldLineage
   },
   {
     key: 'zoomIn',
     name: '完整血缘链路',
-    value: wholeChecked.value,
-    action(checked: boolean) {
-      wholeChecked.value = checked;
-      props.handleWholeLineage(checked);
-    },
+    value: wholeChecked,
+    action:handleWholeLineage
+
   },
 ];
+
 </script>
 
 <style scoped>

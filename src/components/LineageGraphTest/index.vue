@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
-import Toolbar from '../LineageGraph/components/Toolbar';
+import Toolbar from '../LineageGraph/components/Toolbar/index.vue';
 import G6 from '@antv/g6';
 import '../LineageGraph/index.css';
 import '../LineageGraph/registerShape';
@@ -300,3 +300,4 @@ defineExpose({
   handleExitFullscreen,
 });
 </script>
+../LineageGraph/components/Toolbar/index-1
