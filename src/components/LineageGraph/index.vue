@@ -176,14 +176,14 @@ onMounted(() => {
 
 watch(
   () => props.lineageData,
-  () => {
+  (lineageData) => {
     fieldCheckedRef.value = true;
     wholeCheckedRef.value = true;
     topBarRef?.value?.setFieldChecked(true);
     topBarRef?.value?.setWholeChecked(true);
-    if (props.lineageData) {
-      const wholeData = props.lineageData.withProcessData;
-      const partData = props.lineageData.noProcessData;
+    if (lineageData) {
+      const wholeData = lineageData.withProcessData;
+      const partData = lineageData.noProcessData;
       lineageWholeData.value = wholeData;
       lineagePartData.value = partData;
       nodeSize.value = wholeData.size;
@@ -223,16 +223,6 @@ watch(
     }
   }
 );
-
-const fullScreen = () => {
-  if (screenfull.isEnabled) {
-    screenfull.request(canvasWrapper.value);
-    graphRef.value.resize(
-      document.body.clientWidth,
-      document.body.clientHeight
-    );
-  }
-};
 
 // 更改canvas宽高
 const handleChangeSize = (width: any, height: any) => {

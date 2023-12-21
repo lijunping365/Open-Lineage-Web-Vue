@@ -53,17 +53,13 @@
         </Button>
         <template v-if="model === 'test'">
           <Select
-            v-model:value="selectedSize"
-            style="
-               {
-                width: 100;
-              }
-            "
+            v-model="selectedSize"
+            style="width: 120px"
             @change="handleChangeSize"
             :options="[
-              { value: '100', label: '100节点' },
-              { value: '500', label: '500节点' },
-              { value: '1000', label: '1000节点' },
+              { value: '10', label: '100节点' },
+              { value: '50', label: '500节点' },
+              { value: '100', label: '1000节点' },
             ]"
           />
         </template>
@@ -208,7 +204,7 @@ const emit = defineEmits([
 ]);
 const open = ref(false);
 const selectedValue = ref('hive');
-const selectedSize = ref('');
+const selectedSize = ref('100');
 const theme = computed(() => props.theme);
 const textWaterMarker = computed(() => props.textWaterMarker);
 const highlightColor = computed(() => props.highlightColor);

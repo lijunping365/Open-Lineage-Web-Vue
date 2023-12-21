@@ -8,9 +8,9 @@
       @layoutChange="(newLayout: string) => (layout = newLayout)"
       @nodeSizeChange="(newTestSize: number) => (testSize = newTestSize)"
       @handleParseSql="handleParseSql"
+      @modelChange="handleChangeModel"
       :highlightColor="highlightColor"
       :textWaterMarker="textWaterMarker"
-      @modelChange="(newModel: string) => (model = newModel)"
       @highlightColorChange="(newHighlightColor: string) => (highlightColor = newHighlightColor)"
       @textWaterMarkerChange="(newTextWaterMarker: string) => (textWaterMarker = newTextWaterMarker)"
     />
@@ -120,6 +120,7 @@ const handleParseSql = () => {
     nodeSize.value = testSize.value;
     nodeLevel.value = testSize.value;
     lineageData.value = initData(testSize.value);
+    console.log("🚀 ~ file: index.vue:123 ~ handleParseSql ~ lineageData.value:", lineageData.value)
   } else {
     lineageData.value = sourceData.data;
   }

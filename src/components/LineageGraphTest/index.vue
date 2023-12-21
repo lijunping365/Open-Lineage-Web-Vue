@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      ref="ref"
+      ref="canvasWrapper"
       class="canvas-wrapper"
     >
       <div
@@ -10,14 +10,14 @@
       >
         <Toolbar
           :layout="layout"
-          @handleChangeSize="(width, height) => handleChangeSize(width, height)"
+          @handleChangeSize="handleChangeSize"
           @handleZoomOut="() => handleZoomOut(graphRef)"
           @handleZoomIn="() => handleZoomIn(graphRef)"
           @handleRealZoom="() => handleRealZoom(graphRef)"
           @handleAutoZoom="() => handleAutoZoom(graphRef)"
           @handleRefreshLayout="() => handleRefreshLayout(graphRef)"
           @handleDownloadImage="() => handleDownloadImage(graphRef)"
-          @handleEnterFullscreen="() => handleEnterFullscreen(ref)"
+          @handleEnterFullscreen="() => handleEnterFullscreen(canvasWrapper)"
           @handleExitFullscreen="handleExitFullscreen"
         />
       </div>
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, watchEffect } from 'vue';
+import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 import Toolbar from '../LineageGraph/components/Toolbar/index.vue';
 import G6 from '@antv/g6';
 import '../LineageGraph/index.css';
@@ -58,37 +58,40 @@ const props = defineProps<{
   highlightColor: string;
 }>();
 
-const refs = {
-  ref: ref(null),
-  toolbarRef: ref(null),
-  graphRef: ref(null),
-  topBarRef: ref(null),
-};
-
+const toolbarRef = ref(); // 或者使用正确的类型代替any
+const graphRef = ref();
+const canvasWrapper = ref();
 const fieldCheckedRef = ref(true);
 const wholeCheckedRef = ref(true);
 const currentHighlightColorRef = ref(props.highlightColor);
 
-onMounted(() => {
-  watchEffect(() => {
-    if (props.lineageData) {
-      const data = dataTransform(props.lineageData);
-      renderGraph(refs.graphRef.value, data);
+watch(
+  () => props.lineageData,
+  (lineageData) => {
+    if (lineageData) {
+      const data = dataTransform(lineageData);
+      renderGraph(graphRef.value, data);
     }
-  });
+  }
+);
 
-  watchEffect(() => {
-    handleTextWaterMarker(refs.graphRef.value, props.textWaterMarker);
-  });
+watch(
+  () => props.textWaterMarker,
+  (newValue) => {
+    handleTextWaterMarker(graphRef.value, newValue);
+  }
+);
 
-  watchEffect(() => {
-    currentHighlightColorRef.value = props.highlightColor;
-    handleHighlightColor(refs.graphRef.value, props.highlightColor);
-  });
+watch(
+  () => props.highlightColor,
+  (newValue) => {
+    currentHighlightColorRef.value = newValue;
+    handleHighlightColor(graphRef.value, newValue);
+  }
+);
 
-  onUnmounted(() => {
-    // 清理相关资源
-  });
+onUnmounted(() => {
+  // 清理相关资源
 });
 
 /**
@@ -162,16 +165,19 @@ function handleEdgeClick(graph: any, item: any, name: string) {
   setRightStats(graph, rightActiveEdges, currentHighlightColorRef.value, name);
 }
 
-watchEffect(() => {
-  if (refs.graphRef.value) {
-    const windowWidth = document.documentElement.clientWidth;
-    const windowHeight = document.documentElement.clientHeight;
-    const height = window.outerHeight - 141 || windowHeight;
-    const width = props.layout === 'preview' ? windowWidth : windowWidth - 340;
-    refs.graphRef.value.changeSize(width, height);
-    refs.graphRef.value.fitView();
+watch(
+  () => props.layout,
+  (val) => {
+    if (graphRef.value) {
+      const windowWidth = document.documentElement.clientWidth;
+      const windowHeight = document.documentElement.clientHeight;
+      const height = window.outerHeight - 141 || windowHeight;
+      const width = val === 'preview' ? windowWidth : windowWidth - 340;
+      graphRef.value.changeSize(width, height);
+      graphRef.value.fitView();
+    }
   }
-});
+);
 
 function bindEvents(graph: any) {
   // 监听节点点击事件
@@ -205,29 +211,29 @@ function bindEvents(graph: any) {
 }
 
 const handleChangeSize = (width: any, height: any) => {
-  refs.graphRef.value.changeSize(width, height);
-  refs.graphRef.value.fitView();
+  graphRef.value.changeSize(width, height);
+  graphRef.value.fitView();
 };
 
 onMounted(() => {
-  if (!refs.graphRef.value) {
+  if (!graphRef.value) {
     // 实例化 Minimap
     const minimap = new G6.Minimap();
     // 工具栏
-    const toolbar = new G6.ToolBar({
-      getContent: () => {
-        return refs.toolbarRef.value.$el.innerHTML || '';
-      },
-    });
+    // const toolbar = new G6.ToolBar({
+    //   getContent: () => {
+    //     return toolbarRef.value || '';
+    //   },
+    // });
     // 网格画布
     const grid = new G6.Grid();
-    const container: any = refs.ref.value;
+    const container: any = canvasWrapper.value;
     const windowWidth = document.documentElement.clientWidth;
     const windowHeight = document.documentElement.clientHeight;
     const width = props.layout === 'preview' ? windowWidth : windowWidth - 340;
     const height = window.outerHeight - 141 || windowHeight;
     // 实例化 Graph
-    refs.graphRef.value = new G6.Graph({
+    graphRef.value = new G6.Graph({
       container: container || '',
       width: width,
       height: height,
@@ -274,8 +280,8 @@ onMounted(() => {
     });
   }
 
-  if (refs.graphRef.value) {
-    const graph = refs.graphRef.value;
+  if (graphRef.value) {
+    const graph = graphRef.value;
     // 设置文字水印
     graph.setTextWaterMarker(props.textWaterMarker);
     bindEvents(graph);
@@ -283,7 +289,6 @@ onMounted(() => {
 });
 
 defineExpose({
-  refs,
   fieldCheckedRef,
   wholeCheckedRef,
   currentHighlightColorRef,
@@ -300,4 +305,3 @@ defineExpose({
   handleExitFullscreen,
 });
 </script>
-../LineageGraph/components/Toolbar/index-1
