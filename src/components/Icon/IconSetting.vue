@@ -2,7 +2,7 @@
  * @Author: yuxuan-ctrl 
  * @Date: 2023-12-19 16:19:07
  * @LastEditors: yuxuan-ctrl 
- * @LastEditTime: 2023-12-20 16:31:11
+ * @LastEditTime: 2023-12-21 15:45:20
  * @FilePath: \Open-Lineage-Web-Vue\src\components\Icon\IconSetting.vue
  * @Description: 
  * 
@@ -31,7 +31,6 @@
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
       />
     </svg>
-    <!-- <div>111111111</div> -->
   </template>
   
   <script lang="ts" setup>
