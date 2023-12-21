@@ -1,12 +1,12 @@
 <template>
   <div
     ref="containerElement"
-    :style="style"
+    class="monaco"
   />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, computed, watch } from 'vue';
+import { onMounted, onUnmounted, ref, computed, watch, toRef, toRaw } from 'vue';
 import * as monaco from 'monaco-editor';
 // import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
@@ -52,9 +52,12 @@ const containerElement = ref<HTMLDivElement | null>(null);
 const editor = ref<monaco.editor.IStandaloneCodeEditor | null>(null);
 
 const style = ref({
-  width: processSize(props.width || ''),
-  height: processSize(props.height || ''),
+  width: processSize(props.width || '400px'),
+  height: processSize(props.height || '100vh'),
 });
+
+const width = toRef(style.value, 'width');
+const height = toRef(style.value, 'height');
 
 const initMonaco = () => {
   const finalValue =
@@ -84,15 +87,13 @@ onUnmounted(() => {
 });
 
 const updateLayoutWidth = (val) => {
-  console.log(11111111);
-  style.value.width = val;
-  //   editor.value?.layout();
+  style.value.width = processSize(val);
+  toRaw(editor.value)?.layout();
 };
 
 const updateLayoutHeight = (val) => {
-  console.log(11111111);
-  style.value.height = val;
-  //   editor.value?.layout();
+  style.value.height = processSize(val);
+  toRaw(editor.value)?.layout();
 };
 
 watch(() => props.width, updateLayoutWidth);
@@ -113,3 +114,10 @@ const updateLanguage = () => {
 
 watch(() => props.language, updateLanguage);
 </script>
+
+<style scoped>
+.monaco {
+  width: v-bind(width);
+  height: v-bind(height);
+}
+</style>

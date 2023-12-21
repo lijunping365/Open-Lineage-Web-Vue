@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import {
   BorderOuterOutlined,
   UndoOutlined,
@@ -50,7 +50,7 @@ const emit = defineEmits([
 ]);
 const isFull = ref(true);
 
-const options = [
+const options = ref([
   {
     key: 'zoomOut',
     description: '放大',
@@ -99,27 +99,26 @@ const options = [
       emit('handleDownloadImage');
     },
   },
-  isFull.value
-    ? {
-        key: 'fullscreenOutlined',
-        description: '全屏查看',
-        name: FullscreenOutlined,
-        action: () => {
-          isFull.value = !isFull.value;
-          emit('handleEnterFullscreen');
-        },
-      }
-    : {
-        key: 'fullscreenExitOutlined',
-        description: '退出全屏',
-        name: FullscreenExitOutlined,
-        action: () => {
-          isFull.value = !isFull.value;
-          emit('handleExitFullscreen');
-        },
-      },
-];
+  {
+    key: isFull.value ? 'fullscreenExitOutlined' : 'fullscreenOutlined',
+    description: isFull.value ? '全屏查看' : '退出全屏',
+    name: isFull.value ?  FullscreenOutlined: FullscreenExitOutlined,
+    action: () => {
+      isFull.value = !isFull.value;
+      isFull.value
+        ? emit('handleExitFullscreen')
+        : emit('handleEnterFullscreen');
+    },
+  },
+]);
 
+watch(()=>isFull.value,(val)=>{
+  options.value.find(item=>{
+    if(["fullscreenExitOutlined","fullscreenOutlined"].includes(item.key)){
+      item.name = val ? FullscreenOutlined : FullscreenExitOutlined
+    }
+  })
+})
 onMounted(() => {
   document.addEventListener('webkitfullscreenchange', checkFull);
   document.addEventListener('mozfullscreenchange', checkFull);
@@ -142,17 +141,25 @@ const checkFull = () => {
     !(document as any).msFullscreenElement
   ) {
     isFull.value = true;
+    console.log(
+      '🚀 ~ file: index.vue:145 ~ checkFull ~ isFull.value:',
+      isFull.value
+    );
     // 退出全屏修改canvas宽高
     const windowHeight = document.documentElement.clientHeight;
     const width = props.layout === 'preview' ? windowWidth : windowWidth - 340;
     const height = window.outerHeight - 141 || windowHeight;
-    emit("handleChangeSize",width,height)
+    emit('handleChangeSize', width, height);
   } else {
     isFull.value = false;
+    console.log(
+      '🚀 ~ file: index.vue:153 ~ checkFull ~ isFull.value:',
+      isFull.value
+    );
     // 全屏查看修改canvas宽高
     const width = windowWidth;
     const height = window.outerHeight;
-    emit("handleChangeSize",width,height)
+    emit('handleChangeSize', width, height);
   }
 };
 </script>

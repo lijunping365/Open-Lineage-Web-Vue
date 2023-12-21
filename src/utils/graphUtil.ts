@@ -108,6 +108,10 @@ export const handleDownloadImage = (graph: any) => {
  * 全屏查看
  */
 export const handleEnterFullscreen = (container: any) => {
+  console.log(
+    '🚀 ~ file: graphUtil.ts:111 ~ handleEnterFullscreen ~ container:',
+    container.requestFullscreen
+  );
   if (container.requestFullscreen) {
     container.requestFullscreen();
   } else if (container.mozRequestFullScreen) {

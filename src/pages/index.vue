@@ -18,47 +18,47 @@
       <!-- <SplitPane v-bind="splitPaneProps"> -->
       <div class="splitPane">
         <div class="pane1">
-        <div
-          class="flex flex-auto"
-          ref="ref1"
-        >
-          <MonacoEditor
-            :width="'400px'"
-            :height="'100vh'"
-            :language="'sql'"
-            :theme="theme"
-            v-model="code"
-          />
+          <div
+            class="flex flex-auto"
+            ref="ref1"
+          >
+            <MonacoEditor
+              :width="size.current"
+              :height="'100vh'"
+              :language="'sql'"
+              :theme="theme"
+              v-model="code"
+            />
+          </div>
         </div>
-      </div>
-      <div class="pane2">
-        <div
-          class="absolute inset-0 w-full overflow-auto md:h-full"
-          ref="ref2"
-        >
-          <Spin :spinning="loading">
-            <template v-if="model === 'test'">
-              <LineageGraphTest
-                :layout="layout"
-                :lineageData="lineageData"
-                :highlightColor="highlightColor"
-                :textWaterMarker="textWaterMarker"
-              />
-            </template>
-            <template v-else>
-              <LineageGraph
-                :layout="layout"
-                :lineageData="lineageData"
-                v-model:nodeSize="nodeSize"
-                v-model:nodeLevel="nodeLevel"
-                @nodeLevel="(newNodeLevel: number) => (nodeLevel = newNodeLevel)"
-                :highlightColor="highlightColor"
-                :textWaterMarker="textWaterMarker"
-              />
-            </template>
-          </Spin>
+        <div class="pane2">
+          <div
+            class="absolute inset-0 w-full overflow-auto md:h-full"
+            ref="ref2"
+          >
+            <Spin :spinning="loading">
+              <template v-if="model === 'test'">
+                <LineageGraphTest
+                  :layout="layout"
+                  :lineageData="lineageData"
+                  :highlightColor="highlightColor"
+                  :textWaterMarker="textWaterMarker"
+                />
+              </template>
+              <template v-else>
+                <LineageGraph
+                  :layout="layout"
+                  :lineageData="lineageData"
+                  v-model:nodeSize="nodeSize"
+                  v-model:nodeLevel="nodeLevel"
+                  @nodeLevel="(newNodeLevel: number) => (nodeLevel = newNodeLevel)"
+                  :highlightColor="highlightColor"
+                  :textWaterMarker="textWaterMarker"
+                />
+              </template>
+            </Spin>
+          </div>
         </div>
-      </div>
         <!-- </SplitPane> -->
       </div>
     </main>
@@ -120,7 +120,10 @@ const handleParseSql = () => {
     nodeSize.value = testSize.value;
     nodeLevel.value = testSize.value;
     lineageData.value = initData(testSize.value);
-    console.log("🚀 ~ file: index.vue:123 ~ handleParseSql ~ lineageData.value:", lineageData.value)
+    console.log(
+      '🚀 ~ file: index.vue:123 ~ handleParseSql ~ lineageData.value:',
+      lineageData.value
+    );
   } else {
     lineageData.value = sourceData.data;
   }
@@ -186,16 +189,16 @@ const handleChangeModel = (newModel: string) => {
   right: 0px;
 }
 
-.pane1{
+.pane1 {
   flex: 0 0 auto;
-    position: relative;
-    outline: none;
-    width: 340px;
+  position: relative;
+  outline: none;
+  width: 340px;
 }
 
-.pane2{
+.pane2 {
   flex: 1 1 0%;
-    position: relative;
-    outline: none;
+  position: relative;
+  outline: none;
 }
 </style>

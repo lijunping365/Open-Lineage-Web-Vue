@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
+import { onMounted, onUnmounted, ref, toRaw, watch, watchEffect } from 'vue';
 import Toolbar from '../LineageGraph/components/Toolbar/index.vue';
 import G6 from '@antv/g6';
 import '../LineageGraph/index.css';
@@ -70,7 +70,7 @@ watch(
   (lineageData) => {
     if (lineageData) {
       const data = dataTransform(lineageData);
-      renderGraph(graphRef.value, data);
+      renderGraph(toRaw(graphRef.value), data);
     }
   }
 );
@@ -220,11 +220,11 @@ onMounted(() => {
     // 实例化 Minimap
     const minimap = new G6.Minimap();
     // 工具栏
-    // const toolbar = new G6.ToolBar({
-    //   getContent: () => {
-    //     return toolbarRef.value || '';
-    //   },
-    // });
+    const toolbar = new G6.ToolBar({
+      getContent: () => {
+        return toRaw(toolbarRef.value) || '';
+      },
+    });
     // 网格画布
     const grid = new G6.Grid();
     const container: any = canvasWrapper.value;
@@ -305,3 +305,19 @@ defineExpose({
   handleExitFullscreen,
 });
 </script>
+
+<style scoped>
+:-webkit-full-screen {
+  background-color: #ffffff !important;
+}
+:-moz-full-screen {
+  background-color: #ffffff !important;
+}
+
+:-ms-fullscreen {
+  background-color: #ffffff !important;
+}
+:fullscreen {
+  background-color: #ffffff !important;
+}
+</style>

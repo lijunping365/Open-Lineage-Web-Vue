@@ -24,7 +24,7 @@
           @handleAutoZoom="handleAutoZoom(graphRef)"
           @handleRefreshLayout="handleRefreshLayout(graphRef)"
           @handleDownloadImage="handleDownloadImage(graphRef)"
-          @handleEnterFullscreen="handleEnterFullscreen(canvasWrapper)"
+          @handleEnterFullscreen="handleEnterFullscreen(toRaw(canvasWrapper))"
           @handleExitFullscreen="handleExitFullscreen"
         />
       </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, reactive, watch, watchEffect } from 'vue';
+import { ref, onMounted, onUnmounted, reactive, watch, watchEffect, toRaw } from 'vue';
 import Toolbar from './components/Toolbar/index.vue';
 import Topbar from './components/Topbar/index.vue';
 import G6 from '@antv/g6';
@@ -106,11 +106,11 @@ onMounted(() => {
     const minimap = new G6.Minimap();
     // TODO 报错
     // 工具栏
-    // const toolbar = new G6.ToolBar({
-    //   getContent: () => {
-    //     return toolbarRef.value || '';
-    //   },
-    // });
+    const toolbar = new G6.ToolBar({
+      getContent: () => {
+        return toRaw(toolbarRef.value) || '';
+      },
+    });
     //网格画布
     const grid = new G6.Grid();
     const container: any = canvasWrapper.value;
@@ -190,7 +190,7 @@ watch(
       nodeLevel.value = wholeData.level;
 
       const data = transformData(wholeData.data);
-      renderGraph(graphRef.value, data);
+      renderGraph(toRaw(graphRef.value), data);
     }
   }
 );
@@ -406,4 +406,18 @@ const onWholeLineage = (checked: boolean) => {
 
 <style scoped>
 @import url("./index.css");
+
+:-webkit-full-screen {
+  background-color: #ffffff !important;
+}
+:-moz-full-screen {
+  background-color: #ffffff !important;
+}
+
+:-ms-fullscreen {
+  background-color: #ffffff !important;
+}
+:fullscreen {
+  background-color: #ffffff !important;
+}
 </style>
